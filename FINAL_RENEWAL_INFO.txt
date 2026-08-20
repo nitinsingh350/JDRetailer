@@ -1,0 +1,18 @@
+JD RETAILER - FINAL 30-DAY RENEWAL FLOW
+
+Use the Owner Access Generator and choose 30 Days for monthly customers.
+
+FLOW:
+- Valid 30-day code => full app unlocked.
+- When the code reaches its expiry timestamp => access validation fails and app locks.
+- On the HTML app, the user sees:
+    Subscription Expired
+    Please pay ₹50 to renew
+    Renew Subscription ₹50
+- Renew button asks for a new Owner Access Code.
+- You receive payment and generate a fresh 30-day code for the SAME customer's mobile number.
+- Customer enters new code => app unlocks again for the new validity period.
+
+IMPORTANT:
+This access system uses the device clock because it works offline. For tamper-resistant commercial
+billing and instant remote disable/renewal, use a server-backed license system in a future production build.

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JD Retailer Owner Access Generator</title>
+<style>
+body{font-family:Arial;background:#f4f4f4;margin:0;padding:20px}.card{max-width:620px;margin:auto;background:white;padding:20px;border-radius:16px}
+input,button,textarea{width:100%;box-sizing:border-box;padding:12px;margin:7px 0;border:1px solid #ccc;border-radius:10px}
+button{background:#111;color:#fff;border:0;font-weight:bold}textarea{min-height:150px}
+.note{font-size:12px;color:#666}h2{margin-top:0}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>JD Retailer Owner Access</h2>
+<p>Generate an access code only for customers you approve.</p>
+<label>Customer Mobile Number</label>
+<input id="phone" placeholder="10-digit mobile number">
+<label>Access Validity</label>
+<select id="days" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc">
+<option value="30">30 Days</option>
+<option value="90">90 Days</option>
+<option value="180">180 Days</option>
+<option value="365">1 Year</option>
+<option value="0">No Expiry</option>
+</select>
+<button onclick="generate()">Generate Access Code</button>
+<textarea id="out" readonly placeholder="Access code will appear here"></textarea>
+<button onclick="copyCode()">Copy Code</button>
+<p class="note"><b>Keep this file private.</b> It contains the owner signing key. Do not send this admin file to customers.</p>
+</div>
+<script>
+const PRIVATE_KEY_PEM = `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC3iQ6aiL1Hp/EN
++ut2/HVhUUe5yai65xC52WYBsT+spnOAkO0/ykREdHONuGEf3lQF33BiOaraGpgO
+hlxmqAFXsZXes7BHdL4OhbT2TKFEy78d1YPvLc5DkmQzuOsUaKKOQ96jQ4DvKoxz
+thXhtKFxeznh0AE4PRSFDz2uk21yO/MOIj++kM0iz8YUqgImv/PGX38HXejShlHj
+ryaUR0fcP//2NnxV/8cLm75jpLvOMVgtHU9n7LbuMa8j15hiBHkqTQOlD0jViAQg
+3oC/MX9MErQShQpxbALcyvIiMInV7NY/1gYfVsk7M1hUXtrZglKUUwn5q1VrYAdK
+2ENm7budAgMBAAECggEAJWrSyFySQjaR5Wi/cn2brKB2gAEF3jzXYxxYOIYbViaF
+K7PgOn4RFueq2zy4yFd6R8w6zDu3gkmjsGpiEie0Rl2VEVcO3DKHwMwvjXsn8a+c
+IgfyouNyxsHkncrYWkvOwDREAoLzmU7SXZDEu0QpGcqmjUvrw7xoH4xw5dN2n7AR
+lfClL3TnUAAGCirAuGlFk/KeF5aYMWMzYWsgHmBwUw5++tvVXHaNwRPuQMDHH80n
+fWf4Y6ZdMnh82WY7OtsfXKPu2L9UThy4uCuuFwnHfQnzOopdU5y8P69guX4jkS6E
+Je6nkF/DsTzz5ESUYmjAAzkc0yeswrqL0QoQcRyHIQKBgQD/WNNBDe8AIMNscyt4
+5okdyw7aD6chpvgJqqZOAg5uDKVFfCi0i5V2xvnw1OjAYgO1r5h4X2+b9x5feptc
+LCizVAUCTGfqYqTkYPQmG8drDbcLbr8xuohJwtZrRJ1SsvOqZ7BUk1gGEF198gxn
+HR4Dv2bosGGT/ud0THIS0q7HKQKBgQC4ATePO55lC976V+J1flT0usx57gZftIZa
+rnBW3aoX9RDtYPUd8thT1sXzti9Fit4dOFd0ChpWU6UEyPaOdrCjkFwiIrbeWqYj
+4+3WEvLanPGaB71XiVgugd5LB9N1YdE8KQbCaEYww4yewM+1khpDwfOLS3Z6KLbp
+QteDbLMjVQKBgEM7uCQg7xUxi0M67+9dhCz8EmUIShFqTVT+Qdu4XuRLIBkzn+Qp
+/KjRq23mIYLGTAPCwHqxZknCv5SUS+PxHKZbMRZx18q3PoODo8WE+vUNH207M8x8
+OPZy/tIvttzXkaEEvEEIqtyt4nAPE4Ty/bwu4YHTL14wd/D/T+n032BBAoGAXayg
+8FZVqPOGLMSZEV+jOIPwnRJERGzPCVNM9awbb97fIzn9D6YV43ivhgb1wd2UfiO0
+wepyxggHNoxomNZrzpkrjmVF26Uid5sN9bHn2MuVY+kUx3+wWNzcoi31xQhrUMlC
+G66iLSkgaaGXHMSogl428m8UfdREajQRK2MnP5ECgYB9ECrnCGoA8Ae0WHNDa3ZP
+bb4g4A+pK7gAQj11tkQqj5uuy/dfUgWPPYnEid3nAo4IpEh2aq3bqQ+UWYGRESh8
+wwR4u5KtzwWdB2m+socAo/F1QYBKLfO/JMEd7xSZdYgBW1AR08t/jAkbW8YctGo/
+zOvdI5zgU4aAlk3VoQeIxw==
+-----END PRIVATE KEY-----
+`;
+
+function b64url(bytes){
+  let s=''; bytes.forEach(b=>s+=String.fromCharCode(b));
+  return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function pemToBytes(pem){
+  const b64=pem.replace(/-----[^-]+-----/g,'').replace(/\s/g,'');
+  const bin=atob(b64); return Uint8Array.from(bin,c=>c.charCodeAt(0));
+}
+async function generate(){
+  const phone=document.getElementById('phone').value.replace(/\D/g,'').slice(-10);
+  const days=parseInt(document.getElementById('days').value);
+  if(phone.length!==10){alert('Enter valid 10-digit number');return;}
+  const exp=days===0?0:(Date.now()+days*24*60*60*1000);
+  const payload=JSON.stringify({phone,exp});
+  const payloadBytes=new TextEncoder().encode(payload);
+  const key=await crypto.subtle.importKey(
+    'pkcs8',
+    pemToBytes(PRIVATE_KEY_PEM),
+    {name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},
+    false,
+    ['sign']
+  );
+  const sig=new Uint8Array(await crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,payloadBytes));
+  document.getElementById('out').value=b64url(payloadBytes)+'.'+b64url(sig);
+}
+async function copyCode(){
+  const v=document.getElementById('out').value;
+  if(!v)return;
+  await navigator.clipboard.writeText(v);
+  alert('Access code copied');
+}
+</script>
+</body>
+</html>

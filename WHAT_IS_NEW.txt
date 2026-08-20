@@ -1,0 +1,16 @@
+JD RETAILER - SUBSCRIPTION DASHBOARD UPDATE
+
+SETTINGS > MY SUBSCRIPTION NOW SHOWS:
+- ₹50 / Month plan
+- ACTIVE / EXPIRED status
+- Exact days remaining
+- Registered mobile number
+- Valid-until date
+- Warning when 5 days or less remain
+- Renew / Enter New Access Code button
+
+BEHAVIOUR:
+- Remaining days are calculated from the signed Owner Access Code expiry.
+- 30-day access shows a live countdown.
+- At expiry: 0 days, status Expired, app locks and shows "Please pay ₹50 to renew".
+- New valid access code refreshes the subscription dashboard automatically.

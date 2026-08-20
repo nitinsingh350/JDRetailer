@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>JD Retailer Final</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--text:#111;--muted:#6e737b;--line:#d9dde2;--dark:#111;--soft:#eef0f2;--danger:#b42318;--success:#16794b}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);padding-bottom:78px}
+header{position:sticky;top:0;z-index:20;background:#111;color:#fff;padding:15px 14px}
+header .brand{font-size:20px;font-weight:900}header .sub{font-size:12px;opacity:.75;margin-top:2px}
+.wrap{max-width:850px;margin:auto;padding:12px}.page{display:none}.page.active{display:block}
+.card{background:#fff;border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+h2,h3{margin:0 0 12px}label{display:block;font-size:12px;font-weight:700;color:#555;margin-bottom:5px}
+input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px;border:1px solid #cfd4da;border-radius:10px;background:#fff}
+button{border:0;border-radius:10px;padding:11px 12px;font-weight:800;cursor:pointer}
+.primary{background:#111;color:#fff}.light{background:#eef1f4}.danger{background:#fde8e7;color:#a11}.success{background:#147a47;color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid4{display:grid;grid-template-columns:2fr .8fr 1fr .8fr;gap:8px}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#171717;color:#fff;border-radius:14px;padding:12px}.stat b{display:block;font-size:21px}.stat span{font-size:11px;color:#bbb}
+.muted{color:var(--muted);font-size:12px}.listitem{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center}.badge{display:inline-block;background:#eef1f4;padding:4px 7px;border-radius:999px;font-size:11px}
+.tablewrap{overflow-x:auto}.table{width:100%;border-collapse:collapse;min-width:760px}.table th,.table td{border-bottom:1px solid #e5e7ea;padding:8px 6px;font-size:12px;text-align:left}.table th{background:#f7f7f7}
+.totalrow{display:flex;justify-content:space-between;margin:7px 0}.grand{font-size:20px;font-weight:900;border-top:1px solid #222;padding-top:8px;margin-top:8px}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid #ddd;display:grid;grid-template-columns:repeat(6,1fr);padding-bottom:env(safe-area-inset-bottom)}
+.navbtn{background:#fff;color:#777;border-radius:0;padding:8px 3px;font-size:10px}.navbtn b{display:block;font-size:18px}.navbtn.active{background:#f2f3f5;color:#111}
+.small{font-size:11px}.right{text-align:right}.hide{display:none!important}
+@media(max-width:650px){.grid2,.grid3{grid-template-columns:1fr}.grid4{grid-template-columns:1.5fr .6fr 1fr .7fr}.stats{grid-template-columns:1fr 1fr}}
+@page{size:A5 portrait;margin:7mm}
+.print-only{display:none}
+@media print{
+ html,body{width:148mm!important;height:210mm!important;min-height:210mm!important;max-width:148mm!important;background:#fff!important;margin:0!important;padding:0!important;overflow:hidden!important}
+ header,.bottomnav,.no-print{display:none!important}.wrap{max-width:none!important;width:100%!important;padding:0!important}
+ .page{display:none!important}#billPage{display:block!important}.card{box-shadow:none!important;border-radius:0!important;padding:0!important;margin:0!important}
+ .print-only{display:block!important}
+ .print-head{border:1.6px solid #000;padding:3mm;margin-bottom:2mm}
+ .print-company{display:flex;justify-content:space-between;gap:4mm}
+ .print-company .name{font-size:17px;font-weight:900}.print-company .meta{font-size:8.5px;line-height:1.45;text-align:right}
+ .print-title{display:flex;justify-content:space-between;border-top:1px solid #000;margin-top:2mm;padding-top:1.5mm;font-size:9px}
+ .print-customer{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;border:1px solid #000;padding:2mm;margin-bottom:2mm}
+ .print-customer div{font-size:8.5px}.print-customer strong{display:block;font-size:7px;text-transform:uppercase}
+ .table{min-width:0!important;width:100%!important;table-layout:fixed;border:1px solid #000}
+ .table th,.table td{border:1px solid #000!important;font-size:7.8px!important;padding:3px 2px!important;word-wrap:break-word}
+ .table th:nth-child(1),.table td:nth-child(1){width:5%}.table th:nth-child(2),.table td:nth-child(2){width:23%}
+ .table th:nth-child(3),.table td:nth-child(3){width:10%}.table th:nth-child(4),.table td:nth-child(4){width:7%}
+ .table th:nth-child(5),.table td:nth-child(5){width:11%}.table th:nth-child(6),.table td:nth-child(6){width:10%}
+ .table th:nth-child(7),.table td:nth-child(7){width:9%}.table th:nth-child(8),.table td:nth-child(8){width:12%}
+ .table th:nth-child(9),.table td:nth-child(9){width:13%}
+ .bill-totals{border:1px solid #000!important;padding:2mm!important;margin-top:2mm!important}
+ .totalrow{font-size:8.5px!important;margin:2px 0!important}.grand{font-size:12px!important;border-top:1px solid #000!important}
+ .print-footer{display:flex!important;justify-content:space-between;gap:6mm;margin-top:5mm;font-size:8px}.sign{width:45%;border-top:1px solid #000;padding-top:1mm;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="jdAccessGate" style="position:fixed;inset:0;z-index:999999;background:#f5f5f5;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Arial,sans-serif">
+  <div style="width:min(430px,100%);background:#fff;border:1px solid #ddd;border-radius:18px;padding:24px;box-shadow:0 10px 35px rgba(0,0,0,.12)">
+    <div style="font-size:30px;font-weight:900;text-align:center">JD Retailer</div>
+    <div style="text-align:center;color:#555;margin-top:6px">Premium Retail Billing Software</div>
+    <div style="font-size:32px;font-weight:900;text-align:center;margin:24px 0 4px">₹50 / month</div>
+    <div style="text-align:center;color:#666;font-size:13px;margin-bottom:22px">Purchase access from the owner to unlock the app.</div>
+
+    
+    <div id="jdExpiredStep" style="display:none;text-align:center">
+      <div style="font-size:24px;font-weight:900;margin-bottom:8px">Subscription Expired</div>
+      <div style="color:#555;margin-bottom:8px">Your JD Retailer access has expired.</div>
+      <div style="font-size:28px;font-weight:900;margin:14px 0">Please pay ₹50 to renew</div>
+      <div style="color:#666;font-size:13px;margin-bottom:20px">After payment, get a new 30-day Access Code from the owner.</div>
+      <button onclick="jdRenewAccess()" style="width:100%;padding:14px;border:0;border-radius:10px;background:#111;color:#fff;font-size:16px;font-weight:800">Renew Subscription ₹50</button>
+    </div>
+
+<div id="jdGateStep1">
+      <button onclick="jdShowCodeStep()" style="width:100%;padding:14px;border:0;border-radius:10px;background:#111;color:#fff;font-size:16px;font-weight:800">Get Access / Subscribe ₹50</button>
+      <div style="font-size:12px;color:#777;text-align:center;margin-top:12px">Already purchased? Tap above and enter your access code.</div>
+    </div>
+
+    <div id="jdGateStep2" style="display:none">
+      <label style="font-size:12px;font-weight:700">Mobile Number</label>
+      <input id="jdAccessPhone" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" style="width:100%;box-sizing:border-box;padding:12px;margin:6px 0 12px;border:1px solid #bbb;border-radius:9px">
+      <label style="font-size:12px;font-weight:700">Owner Access Code</label>
+      <textarea id="jdAccessCode" rows="5" placeholder="Paste access code here" style="width:100%;box-sizing:border-box;padding:12px;margin:6px 0 12px;border:1px solid #bbb;border-radius:9px;resize:vertical"></textarea>
+      <button id="jdVerifyBtn" onclick="jdVerifyAndUnlock()" style="width:100%;padding:14px;border:0;border-radius:10px;background:#111;color:#fff;font-size:16px;font-weight:800">Verify Code & Unlock</button>
+      <div id="jdAccessError" style="display:none;color:#b00020;font-size:13px;margin-top:10px;text-align:center"></div>
+      <button onclick="jdBackGate()" style="width:100%;padding:11px;margin-top:8px;border:1px solid #bbb;border-radius:10px;background:#fff">Back</button>
+    </div>
+  </div>
+</div>
+
+<header>
+ <div class="brand">JD Retailer</div>
+ <div class="sub">Mobile Billing • Stock • Profit & Loss</div>
+</header>
+
+<div class="wrap">
+
+<section id="homePage" class="page active">
+ <div class="card">
+  <h2>Dashboard</h2>
+  <div class="stats">
+   <div class="stat"><b id="dSales">₹0</b><span>Today's Sales</span></div>
+   <div class="stat"><b id="dProfit">₹0</b><span>Today's Profit</span></div>
+   <div class="stat"><b id="dBills">0</b><span>Today's Bills</span></div>
+   <div class="stat"><b id="dStock">0</b><span>Products in Stock</span></div>
+  </div>
+ </div>
+ <button class="primary" style="width:100%" onclick="openNewBill()">+ Create New Bill</button>
+ <div class="card" style="margin-top:12px"><h3>Recent Invoices</h3><div id="recent"></div></div>
+</section>
+
+<section id="billPage" class="page">
+ <div class="print-only print-head">
+  <div class="print-company">
+   <div><div class="name"><span id="printBusinessName">YOUR BUSINESS NAME</span></div><div class="small"><span id="printBusinessTag">Retail Store</span></div></div>
+   <div class="meta"><b>GSTIN:</b> <span id="printGstin">-</span><br><span id="printAddress">-</span><br>Mob: <span id="printBusinessPhone">-</span></div>
+  </div>
+  <div class="print-title"><b>TAX INVOICE</b><span>Original for Customer</span></div>
+ </div>
+ <div class="print-only print-customer">
+  <div><strong>Invoice No.</strong><span id="pInv"></span></div>
+  <div><strong>Date</strong><span id="pDate"></span></div>
+  <div><strong>Customer</strong><span id="pCust"></span></div>
+  <div><strong>Phone</strong><span id="pPhone"></span></div>
+  <div><strong>Payment</strong><span id="pPay"></span></div>
+  <div><strong>Place of Supply</strong>Uttar Pradesh</div>
+ </div>
+
+ <div class="card no-print">
+  <h3>Invoice Details</h3>
+  <div class="grid2">
+   <div><label>Invoice No.</label><input id="invNo" readonly></div>
+   <div><label>Date</label><input id="invDate" readonly></div>
+   <div><label>Customer Name</label><input id="cust" placeholder="Walk-in Customer"></div>
+   <div><label>Phone</label><input id="phone" inputmode="tel"></div>
+  </div>
+ </div>
+
+ <div class="card no-print">
+  <h3>Add Item to Bill</h3>
+  <div class="grid2">
+   <div>
+    <label>Product</label>
+    <input id="bProd" list="prodListData" placeholder="Type/select product">
+    <datalist id="prodListData"></datalist>
+   </div>
+   <div><label>Qty</label><input id="bQty" type="number" value="1" min=".01" step=".01"></div>
+   <div><label>Discount %</label><input id="bDisc" type="number" value="0" min="0" step=".01"></div>
+   <div>
+    <label>Rate</label>
+    <input id="bRate" type="number" readonly>
+   </div>
+  </div>
+  <input id="bHsn" type="hidden">
+  <input id="bPurchase" type="hidden">
+  <input id="bGst" type="hidden">
+  <div id="autoProductInfo" class="muted" style="margin-top:8px">Select a product to auto-fill rate, GST and HSN.</div>
+  <button class="primary" style="width:100%;margin-top:10px" onclick="addItem()">Add to Bill</button>
+ </div>
+
+ <div class="card">
+  <div class="tablewrap"><table class="table">
+   <thead><tr><th>Sr</th><th>Product</th><th>HSN</th><th>Qty</th><th>Rate</th><th>Disc%</th><th>GST%</th><th>Taxable</th><th>Final</th><th class="no-print"></th></tr></thead>
+   <tbody id="billBody"></tbody>
+  </table></div>
+ </div>
+
+ <div class="card bill-totals">
+  <div class="totalrow"><span>Gross Amount</span><b>₹<span id="gross">0.00</span></b></div>
+  <div class="totalrow"><span>Discount</span><b>- ₹<span id="discTotal">0.00</span></b></div>
+  <div class="totalrow"><span>Taxable Value</span><b>₹<span id="taxable">0.00</span></b></div>
+  <div class="totalrow"><span>CGST</span><b>₹<span id="cgst">0.00</span></b></div>
+  <div class="totalrow"><span>SGST</span><b>₹<span id="sgst">0.00</span></b></div>
+  <div class="totalrow grand"><span>Grand Total</span><span>₹<span id="grand">0.00</span></span></div>
+  <div class="no-print" style="margin-top:10px">
+   <label>Payment Mode</label><select id="pay"><option>Cash</option><option>UPI</option><option>Card</option><option>Credit/Udhaar</option></select>
+  </div>
+ </div>
+
+ <div class="print-only print-footer">
+  <div class="sign">Customer Signature</div>
+  <div class="sign">Authorized Signatory</div>
+ </div>
+
+ <div class="card no-print">
+  <div class="actions">
+   <button class="success" onclick="saveInvoice()">Save Invoice</button>
+   <button class="primary" onclick="printBill()">Print / Save PDF</button>
+   <button class="success" onclick="sendWhatsApp()" style="grid-column:1 / -1;font-size:16px">Send PDF Bill on WhatsApp</button>
+   <button class="light" onclick="resetBill()">New Bill</button>
+  </div>
+ </div>
+</section>
+
+
+<section id="productsPage" class="page">
+ <div class="card">
+  <h3>Purchase Entry / Product Master</h3>
+  <p class="muted">Add product details here once. Billing will auto-fill HSN, GST and rate.</p>
+  <div class="grid2">
+   <div><label>Product Name</label><input id="pName" placeholder="e.g. Samsung 43 inch TV"></div>
+   <div><label>HSN Code</label><input id="pHsn" placeholder="HSN"></div>
+   <div><label>Purchase Rate</label><input id="pPurchase" type="number" placeholder="Cost price"></div>
+   <div><label>Selling Rate</label><input id="pSell" type="number" placeholder="Selling price"></div>
+   <div><label>GST %</label><select id="pGst"><option>0</option><option>5</option><option>12</option><option selected>18</option><option>28</option></select></div>
+   <div><label>Purchase Qty / Stock Add</label><input id="pStock" type="number" value="1" min="0"></div>
+  </div>
+  <button class="primary" style="width:100%;margin-top:10px" onclick="addProduct()">Save Purchase / Product</button>
+ </div>
+ <div class="card">
+  <h3>Product Stock</h3>
+  <div id="productsList"></div>
+ </div>
+</section>
+
+
+
+<section id="businessPage" class="page">
+ <div class="card" id="subscriptionDashboard">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+   <div>
+    <div class="muted" style="font-size:11px;text-transform:uppercase;letter-spacing:.7px">JD Retailer Access</div>
+    <h3 style="margin:4px 0">My Subscription</h3>
+   </div>
+   <span id="subStatusBadge" style="border:1px solid #111;border-radius:20px;padding:5px 10px;font-size:11px;font-weight:800">CHECKING</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+   <div style="border:1px solid #ddd;border-radius:12px;padding:12px">
+    <div class="muted" style="font-size:11px">PLAN</div>
+    <div style="font-size:20px;font-weight:900;margin-top:3px">₹50 / Month</div>
+   </div>
+   <div style="border:1px solid #ddd;border-radius:12px;padding:12px">
+    <div class="muted" style="font-size:11px">DAYS REMAINING</div>
+    <div id="subDaysLeft" style="font-size:24px;font-weight:900;margin-top:1px">--</div>
+   </div>
+  </div>
+
+  <div style="margin-top:12px;border-top:1px solid #e5e5e5;padding-top:10px;font-size:13px">
+   <div style="display:flex;justify-content:space-between;gap:10px;margin:6px 0"><span class="muted">Status</span><b id="subStatusText">Checking...</b></div>
+   <div style="display:flex;justify-content:space-between;gap:10px;margin:6px 0"><span class="muted">Registered Mobile</span><b id="subPhone">-</b></div>
+   <div style="display:flex;justify-content:space-between;gap:10px;margin:6px 0"><span class="muted">Valid Until</span><b id="subExpiry">-</b></div>
+  </div>
+
+  <div id="subExpiryWarning" style="display:none;margin-top:12px;border:1px solid #111;border-radius:10px;padding:10px;font-size:12px">
+   Your subscription is ending soon. Renew to avoid billing access being locked.
+  </div>
+
+  <button id="subRenewBtn" class="primary" style="width:100%;margin-top:12px" onclick="jdOpenRenewFromSettings()">Renew / Enter New Access Code</button>
+ </div>
+ <div class="card">
+  <h3>Business Profile</h3>
+  <p class="muted">These details will appear on every invoice.</p>
+  <div class="grid2">
+   <div><label>Business / Shop Name</label><input id="bizName" placeholder="e.g. Sharma Electronics"></div>
+   <div><label>Business Tagline</label><input id="bizTag" placeholder="e.g. Electronics & Appliances"></div>
+   <div><label>GSTIN</label><input id="bizGstin" placeholder="GSTIN"></div>
+   <div><label>Mobile</label><input id="bizPhone" inputmode="tel" placeholder="Business mobile"></div>
+   <div><label>Address</label><textarea id="bizAddress" rows="3" placeholder="Full business address"></textarea></div>
+   <div><label>Email</label><input id="bizEmail" type="email" placeholder="Email (optional)"></div>
+   <div><label>UPI ID</label><input id="bizUpi" placeholder="name@bank"></div>
+   <div><label>Invoice Prefix</label><input id="bizPrefix" placeholder="e.g. SR"></div>
+  </div>
+ </div>
+
+ <div class="card">
+  <h3>Bill Settings</h3>
+  <div class="grid2">
+   <div><label>Invoice Type</label><select id="billType"><option>Tax Invoice</option><option>Retail Invoice</option><option>Estimate</option><option>Quotation</option></select></div>
+   <div><label>Print Size</label><select id="billSize"><option value="A5">A5</option><option value="A4">A4</option></select></div>
+   <div><label>Tax Mode</label><select id="taxMode"><option value="CGST_SGST">CGST + SGST</option><option value="IGST">IGST</option></select></div>
+   <div><label>Authorized Signatory</label><input id="bizSign" placeholder="Owner / Authorized Person"></div>
+  </div>
+  <label style="margin-top:10px">Terms & Conditions</label>
+  <textarea id="bizTerms" rows="3" placeholder="Goods once sold..."></textarea>
+  <div style="margin-top:10px;display:grid;gap:8px">
+   <label style="display:flex;align-items:center;gap:8px"><input id="showHsn" type="checkbox" checked style="width:auto"> Show HSN column</label>
+   <label style="display:flex;align-items:center;gap:8px"><input id="showDiscount" type="checkbox" checked style="width:auto"> Show Discount column</label>
+  </div>
+  <button class="primary" style="width:100%;margin-top:12px" onclick="saveBusinessProfile()">Save Business Profile</button>
+ </div>
+
+ <div class="card">
+  <h3>Preview</h3>
+  <div class="listitem">
+   <b id="previewBizName">YOUR BUSINESS NAME</b>
+   <div class="muted" id="previewBizMeta">Add GSTIN, phone and address</div>
+  </div>
+ </div>
+</section>
+
+<section id="reportsPage" class="page">
+ <div class="card">
+  <h3>Profit & Loss</h3>
+  <div class="stats">
+   <div class="stat"><b id="rSales">₹0</b><span>Total Sales</span></div>
+   <div class="stat"><b id="rGrossProfit">₹0</b><span>Gross Profit</span></div>
+   <div class="stat"><b id="rExpenses">₹0</b><span>Total Expenses</span></div>
+   <div class="stat"><b id="rNetProfit">₹0</b><span>Net Profit</span></div>
+  </div>
+ </div>
+ <div class="card">
+  <h3>Add Expense</h3>
+  <div class="grid2"><div><label>Expense Name</label><input id="eName" placeholder="Rent / Transport / Salary"></div><div><label>Amount</label><input id="eAmount" type="number"></div></div>
+  <button class="primary" style="width:100%;margin-top:10px" onclick="addExpense()">Add Expense</button>
+ </div>
+ <div class="card"><h3>Expenses</h3><div id="expenseList"></div></div>
+</section>
+
+<section id="invoicesPage" class="page">
+ <div class="card"><h3>Invoices</h3><input id="searchInv" placeholder="Search invoice/customer" oninput="renderInvoices()"></div>
+ <div class="card"><div id="invList"></div></div>
+</section>
+
+<section id="settingsPage" class="page">
+ <div class="card">
+  <h3>Backup</h3>
+  <p class="muted">Export all products, invoices and expenses as one JSON backup file.</p>
+  <div class="actions">
+   <button class="primary" onclick="exportBackup()">Export Backup</button>
+   <button class="light" onclick="document.getElementById('restoreFile').click()">Restore Backup</button>
+  </div>
+  <input id="restoreFile" type="file" accept=".json" class="hide" onchange="restoreBackup(event)">
+ </div>
+</section>
+
+</div>
+
+<nav class="bottomnav no-print">
+ <button class="navbtn active" data-page="homePage" onclick="showPage('homePage',this)"><b>⌂</b>Home</button>
+ <button class="navbtn" data-page="billPage" onclick="showPage('billPage',this)"><b>＋</b>Bill</button>
+ <button class="navbtn" data-page="productsPage" onclick="showPage('productsPage',this)"><b>▦</b>Purchase</button>
+ <button class="navbtn" data-page="reportsPage" onclick="showPage('reportsPage',this)"><b>₹</b>Reports</button>
+ <button class="navbtn" data-page="invoicesPage" onclick="showPage('invoicesPage',this)"><b>▤</b>Invoices</button>
+ <button class="navbtn" data-page="businessPage" onclick="showPage('businessPage',this)"><b>⚙</b>Settings</button>
+</nav>
+
+<script>
+const KI='jd_retailer_invoices',KP='jd_retailer_products',KE='jd_retailer_expenses',KB='jd_retailer_business';
+let items=[];
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const get=(k)=>JSON.parse(localStorage.getItem(k)||'[]');
+const set=(k,v)=>{localStorage.setItem(k,JSON.stringify(v));nativeBackup();};
+function backupPayload(){return JSON.stringify({products:get(KP),invoices:get(KI),expenses:get(KE),business:getBusiness()});}
+function nativeBackup(){try{if(window.Android&&Android.saveLocalBackup)Android.saveLocalBackup(backupPayload());}catch(e){}}
+function restoreNativeIfNeeded(){
+ try{
+  if((get(KP).length+get(KI).length+get(KE).length)===0 && window.Android&&Android.loadLocalBackup){
+   const raw=Android.loadLocalBackup();
+   if(raw){const d=JSON.parse(raw);if(d.products)localStorage.setItem(KP,JSON.stringify(d.products));if(d.invoices)localStorage.setItem(KI,JSON.stringify(d.invoices));if(d.expenses)localStorage.setItem(KE,JSON.stringify(d.expenses));if(d.business)localStorage.setItem(KB,JSON.stringify(d.business));}
+  }
+ }catch(e){}
+}
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const today=()=>new Date().toISOString().slice(0,10);
+
+
+function getBusiness(){
+ try{return JSON.parse(localStorage.getItem(KB)||'{}')}catch(e){return {}}
+}
+function saveBusinessProfile(){
+ const b={
+  name:$('bizName').value.trim(),
+  tag:$('bizTag').value.trim(),
+  gstin:$('bizGstin').value.trim(),
+  phone:$('bizPhone').value.trim(),
+  address:$('bizAddress').value.trim(),
+  email:$('bizEmail').value.trim(),
+  upi:$('bizUpi').value.trim(),
+  prefix:$('bizPrefix').value.trim()||'JD',
+  invoiceType:$('billType').value,
+  billSize:$('billSize').value,
+  taxMode:$('taxMode').value,
+  sign:$('bizSign').value.trim(),
+  terms:$('bizTerms').value.trim(),
+  showHsn:$('showHsn').checked,
+  showDiscount:$('showDiscount').checked
+ };
+ localStorage.setItem(KB,JSON.stringify(b));
+ nativeBackup();
+ applyBusinessProfile();
+ resetBill();
+ alert('Business profile saved');
+}
+function loadBusinessForm(){
+ const b=getBusiness();
+ $('bizName').value=b.name||'';$('bizTag').value=b.tag||'';$('bizGstin').value=b.gstin||'';$('bizPhone').value=b.phone||'';
+ $('bizAddress').value=b.address||'';$('bizEmail').value=b.email||'';$('bizUpi').value=b.upi||'';$('bizPrefix').value=b.prefix||'JD';
+ $('billType').value=b.invoiceType||'Tax Invoice';$('billSize').value=b.billSize||'A5';$('taxMode').value=b.taxMode||'CGST_SGST';
+ $('bizSign').value=b.sign||'';$('bizTerms').value=b.terms||'';$('showHsn').checked=b.showHsn!==false;$('showDiscount').checked=b.showDiscount!==false;
+ applyBusinessProfile();
+}
+function applyBusinessProfile(){
+ const b=getBusiness();
+ if($('previewBizName'))$('previewBizName').textContent=b.name||'YOUR BUSINESS NAME';
+ if($('previewBizMeta'))$('previewBizMeta').textContent=[b.gstin,b.phone,b.address].filter(Boolean).join(' • ')||'Add GSTIN, phone and address';
+}
+function fillPrintBusiness(){
+ const b=getBusiness();
+ $('printBusinessName').textContent=b.name||'YOUR BUSINESS NAME';
+ $('printBusinessTag').textContent=b.tag||'Retail Store';
+ $('printGstin').textContent=b.gstin||'-';
+ $('printAddress').textContent=b.address||'-';
+ $('printBusinessPhone').textContent=b.phone||'-';
+}
+
+function showPage(id,btn){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); $(id).classList.add('active');
+ document.querySelectorAll('.navbtn').forEach(b=>b.classList.remove('active')); if(btn)btn.classList.add('active');
+ if(id==='homePage')renderHome(); if(id==='productsPage')renderProducts(); if(id==='reportsPage')renderReports(); if(id==='invoicesPage')renderInvoices(); if(id==='businessPage'){loadBusinessForm();jdUpdateSubscriptionDashboard();}
+}
+function nextInv(){
+ const d=new Date(), biz=getBusiness(), prefix=(biz.prefix||'JD').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)||'JD';
+ const key=`${prefix}-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}-`;
+ let m=0;get(KI).forEach(x=>{if(x.no.startsWith(key))m=Math.max(m,parseInt(x.no.split('-').pop())||0)});return key+String(m+1).padStart(3,'0');
+}
+function resetBill(){items=[];$('invNo').value=nextInv();$('invDate').value=new Date().toLocaleString('en-IN');$('cust').value='';$('phone').value='';$('pay').value='Cash';renderBill()}
+function openNewBill(){resetBill();showPage('billPage')}
+function addItem(){
+ const name=$('bProd').value.trim(),qty=Number($('bQty').value),disc=Number($('bDisc').value||0);
+ const prod=get(KP).find(p=>p.name.toLowerCase()===name.toLowerCase());
+ if(!prod)return alert('Product not found. First add it in Purchase Entry.');
+ if(!qty||qty<=0)return alert('Enter valid quantity');
+ if(Number(prod.stock||0)<qty)return alert('Not enough stock. Available: '+prod.stock);
+ const rate=Number(prod.sell||0),gst=Number(prod.gst||0),purchase=Number(prod.purchase||0),hsn=prod.hsn||'';
+ const gross=qty*rate, discount=gross*disc/100, taxable=gross-discount, tax=taxable*gst/100, final=taxable+tax, cost=qty*purchase, profit=taxable-cost;
+ items.push({name,hsn,qty,rate,disc,gst,purchase,gross,discount,taxable,tax,final,cost,profit});
+ $('bProd').value='';$('bQty').value=1;$('bDisc').value=0;$('bRate').value='';$('autoProductInfo').textContent='Select a product to auto-fill rate, GST and HSN.';renderBill();
+}
+function renderBill(){
+ $('billBody').innerHTML=items.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.name)}</td><td>${esc(x.hsn)}</td><td>${x.qty}</td><td>${fmt(x.rate)}</td><td>${x.disc}</td><td>${x.gst}</td><td>${fmt(x.taxable)}</td><td>${fmt(x.final)}</td><td class="no-print"><button class="danger" onclick="items.splice(${i},1);renderBill()">×</button></td></tr>`).join('');
+ const gross=items.reduce((a,x)=>a+x.gross,0),disc=items.reduce((a,x)=>a+x.discount,0),taxable=items.reduce((a,x)=>a+x.taxable,0),tax=items.reduce((a,x)=>a+x.tax,0);
+ $('gross').textContent=fmt(gross);$('discTotal').textContent=fmt(disc);$('taxable').textContent=fmt(taxable);$('cgst').textContent=fmt(tax/2);$('sgst').textContent=fmt(tax/2);$('grand').textContent=fmt(taxable+tax);
+}
+function saveInvoice(){
+ if(!items.length)return alert('Add at least one product');
+ const all=get(KI),no=$('invNo').value;
+ const obj={no,date:$('invDate').value,dateKey:today(),customer:$('cust').value.trim()||'Walk-in Customer',phone:$('phone').value.trim(),payment:$('pay').value,items:JSON.parse(JSON.stringify(items)),gross:sum('gross'),discount:sum('discount'),taxable:sum('taxable'),tax:sum('tax'),total:sum('final'),profit:sum('profit')};
+ const ix=all.findIndex(x=>x.no===no); if(ix>=0) all[ix]=obj; else all.push(obj); set(KI,all);
+ // deduct stock once only for new invoice
+ if(ix<0){let p=get(KP);obj.items.forEach(it=>{let q=p.find(x=>x.name.toLowerCase()===it.name.toLowerCase());if(q)q.stock=Math.max(0,Number(q.stock||0)-Number(it.qty||0))});set(KP,p)}
+ alert('Invoice saved');renderHome();nativeBackup();
+}
+function sum(k){return items.reduce((a,x)=>a+Number(x[k]||0),0)}
+function printBill(){
+ fillPrintBusiness();
+ $('pInv').textContent=$('invNo').value;$('pDate').textContent=$('invDate').value;$('pCust').textContent=$('cust').value.trim()||'Walk-in Customer';$('pPhone').textContent=$('phone').value.trim()||'-';$('pPay').textContent=$('pay').value;
+ if(window.Android&&Android.printPage){Android.printPage();}else{window.print();}
+}
+function invoiceMessage(){
+ const biz=getBusiness(),name=biz.name||'JD Retailer';
+ let t=`${name}
+Invoice: ${$('invNo').value}
+Customer: ${$('cust').value||'Walk-in Customer'}
+`;
+ items.forEach((x,i)=>t+=`${i+1}. ${x.name} x${x.qty} = ₹${fmt(x.final)}
+`);
+ t+=`Grand Total: ₹${$('grand').textContent}
+Payment: ${$('pay').value}
+Thank you!`;
+ return t;
+}
+function sendWhatsApp(){
+ if(!items.length)return alert('Add items first');
+ if(!$('phone').value.trim())return alert('Enter customer WhatsApp number');
+ fillPrintBusiness();
+ $('pInv').textContent=$('invNo').value;
+ $('pDate').textContent=$('invDate').value;
+ $('pCust').textContent=$('cust').value.trim()||'Walk-in Customer';
+ $('pPhone').textContent=$('phone').value.trim()||'-';
+ $('pPay').textContent=$('pay').value;
+ if(window.Android&&Android.sharePdfOnWhatsApp){
+   Android.sharePdfOnWhatsApp($('phone').value.trim(),$('invNo').value);
+   return;
+ }
+ alert('PDF WhatsApp sharing works in the Android APK build.');
+}
+async function shareBill(){
+ if(!items.length)return alert('Add items first');
+ let t=invoiceMessage();
+ if(window.Android&&Android.openWhatsApp&&$('phone').value.trim()){Android.openWhatsApp($('phone').value.trim(),t);return;}
+ if(window.Android&&Android.shareText){Android.shareText(t);return;} if(navigator.share){try{await navigator.share({title:'Invoice '+$('invNo').value,text:t});return}catch(e){}}
+ try{await navigator.clipboard.writeText(t);alert('Bill copied. Paste in WhatsApp.')}catch(e){alert(t)}
+}
+function addProduct(){
+ const name=$('pName').value.trim(),hsn=$('pHsn').value.trim(),purchase=Number($('pPurchase').value),sell=Number($('pSell').value),gst=Number($('pGst').value),stockAdd=Number($('pStock').value||0);
+ if(!name)return alert('Enter product name'); if(isNaN(sell)||isNaN(purchase))return alert('Enter purchase and selling rate');
+ const p=get(KP);const existing=p.find(x=>x.name.toLowerCase()===name.toLowerCase());
+ if(existing){
+   existing.hsn=hsn;existing.purchase=purchase;existing.sell=sell;existing.gst=gst;existing.stock=Number(existing.stock||0)+stockAdd;
+ }else{
+   p.push({id:Date.now(),name,hsn,purchase,sell,gst,stock:stockAdd});
+ }
+ set(KP,p);
+ ['pName','pHsn','pPurchase','pSell'].forEach(id=>$(id).value='');$('pStock').value=1;renderProducts();alert('Purchase entry saved');
+}
+function renderProducts(){
+ const p=get(KP);$('productsList').innerHTML=p.length?p.map((x,i)=>`<div class="listitem"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">HSN ${esc(x.hsn||'-')} • GST ${x.gst}% • Stock ${x.stock}</div></div><div class="right"><b>₹${fmt(x.sell)}</b><div class="muted">Cost ₹${fmt(x.purchase)}</div></div></div><div style="margin-top:8px"><button class="light" onclick="useProduct(${i})">Use</button> <button class="danger" onclick="deleteProduct(${i})">Delete</button></div></div>`).join(''):'<div class="muted">No products yet.</div>';
+ $('prodListData').innerHTML=p.map(x=>`<option value="${esc(x.name)}"></option>`).join('');
+}
+function useProduct(i){const x=get(KP)[i];$('bProd').value=x.name;$('bHsn').value=x.hsn||'';$('bRate').value=x.sell;$('bPurchase').value=x.purchase;$('bGst').value=String(x.gst);showPage('billPage')}
+function deleteProduct(i){const p=get(KP);p.splice(i,1);set(KP,p);renderProducts()}
+$('bProd').addEventListener('change',()=>{
+ const x=get(KP).find(p=>p.name.toLowerCase()===$('bProd').value.trim().toLowerCase());
+ if(x){
+  $('bHsn').value=x.hsn||'';$('bRate').value=x.sell;$('bPurchase').value=x.purchase;$('bGst').value=String(x.gst);
+  $('autoProductInfo').textContent=`HSN: ${x.hsn||'-'} • GST: ${x.gst}% • Stock: ${x.stock} • Rate: ₹${fmt(x.sell)}`;
+ }else{
+  $('bRate').value='';$('autoProductInfo').textContent='Product not found. Add it first in Purchase Entry.';
+ }
+})
+
+function addExpense(){const n=$('eName').value.trim(),a=Number($('eAmount').value);if(!n||!a)return alert('Enter expense and amount');const e=get(KE);e.push({id:Date.now(),name:n,amount:a,date:new Date().toLocaleString('en-IN'),dateKey:today()});set(KE,e);$('eName').value='';$('eAmount').value='';renderReports()}
+function renderReports(){
+ const inv=get(KI),exp=get(KE);const sales=inv.reduce((a,x)=>a+x.total,0),gp=inv.reduce((a,x)=>a+x.profit,0),ex=exp.reduce((a,x)=>a+x.amount,0);
+ $('rSales').textContent='₹'+fmt(sales);$('rGrossProfit').textContent='₹'+fmt(gp);$('rExpenses').textContent='₹'+fmt(ex);$('rNetProfit').textContent='₹'+fmt(gp-ex);
+ $('expenseList').innerHTML=exp.slice().reverse().map((x,i)=>`<div class="listitem"><div class="row"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.date)}</div></div><b>₹${fmt(x.amount)}</b></div></div>`).join('')||'<div class="muted">No expenses.</div>';
+}
+function renderHome(){
+ const inv=get(KI),t=inv.filter(x=>x.dateKey===today()),sales=t.reduce((a,x)=>a+x.total,0),profit=t.reduce((a,x)=>a+x.profit,0),stock=get(KP).reduce((a,x)=>a+(Number(x.stock)>0?1:0),0);
+ $('dSales').textContent='₹'+fmt(sales);$('dProfit').textContent='₹'+fmt(profit);$('dBills').textContent=t.length;$('dStock').textContent=stock;
+ $('recent').innerHTML=inv.slice().reverse().slice(0,5).map(x=>`<div class="listitem"><div class="row"><div><b>${x.no}</b><div class="muted">${esc(x.customer)}</div></div><b>₹${fmt(x.total)}</b></div></div>`).join('')||'<div class="muted">No invoices yet.</div>';
+}
+function renderInvoices(){
+ const q=($('searchInv').value||'').toLowerCase(),all=get(KI).slice().reverse().filter(x=>(x.no+' '+x.customer+' '+(x.phone||'')).toLowerCase().includes(q));
+ $('invList').innerHTML=all.map(x=>`<div class="listitem"><div class="row"><div><b>${x.no}</b><div class="muted">${esc(x.customer)} • ${esc(x.date)}</div></div><div class="right"><b>₹${fmt(x.total)}</b><div class="muted">Profit ₹${fmt(x.profit)}</div></div></div><div style="margin-top:8px"><span class="badge">${esc(x.payment)}</span> <button class="light" onclick="openInvoice('${x.no}')">Open</button></div></div>`).join('')||'<div class="muted">No invoices.</div>';
+}
+function openInvoice(no){const x=get(KI).find(v=>v.no===no);if(!x)return;$('invNo').value=x.no;$('invDate').value=x.date;$('cust').value=x.customer==='Walk-in Customer'?'':x.customer;$('phone').value=x.phone||'';$('pay').value=x.payment||'Cash';items=JSON.parse(JSON.stringify(x.items||[]));renderBill();showPage('billPage')}
+function exportBackup(){
+ const data={version:2,app:'JD Retailer',created:new Date().toISOString(),business:getBusiness(),products:get(KP),invoices:get(KI),expenses:get(KE)};
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Jai_Durga_Billing_Backup.json';a.click();URL.revokeObjectURL(url);
+}
+function restoreBackup(ev){
+ const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.products)set(KP,d.products);if(d.invoices)set(KI,d.invoices);if(d.expenses)set(KE,d.expenses);if(d.business)localStorage.setItem(KB,JSON.stringify(d.business));alert('Backup restored');location.reload()}catch(e){alert('Invalid backup file')}};r.readAsText(f);
+}
+restoreNativeIfNeeded();loadBusinessForm();resetBill();renderProducts();renderHome();renderReports();nativeBackup();
+</script>
+
+<script>
+const JD_PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt4kOmoi9R6fxDfrrdvx1
+YVFHucmouucQudlmAbE/rKZzgJDtP8pERHRzjbhhH95UBd9wYjmq2hqYDoZcZqgB
+V7GV3rOwR3S+DoW09kyhRMu/HdWD7y3OQ5JkM7jrFGiijkPeo0OA7yqMc7YV4bSh
+cXs54dABOD0UhQ89rpNtcjvzDiI/vpDNIs/GFKoCJr/zxl9/B13o0oZR468mlEdH
+3D//9jZ8Vf/HC5u+Y6S7zjFYLR1PZ+y27jGvI9eYYgR5Kk0DpQ9I1YgEIN6AvzF/
+TBK0EoUKcWwC3MryIjCJ1ezWP9YGH1bJOzNYVF7a2YJSlFMJ+atVa2AHSthDZu27
+nQIDAQAB
+-----END PUBLIC KEY-----`;
+
+
+function jdReadPayload(code){
+  try{
+    const parts=code.trim().split('.');
+    if(parts.length!==2)return null;
+    return JSON.parse(new TextDecoder().decode(jdB64UrlDecode(parts[0])));
+  }catch(e){return null;}
+}
+function jdIsExpiredCode(code){
+  const p=jdReadPayload(code);
+  return !!(p && Number(p.exp)>0 && Date.now()>Number(p.exp));
+}
+function jdShowExpired(){
+  document.getElementById('jdGateStep1').style.display='none';
+  document.getElementById('jdGateStep2').style.display='none';
+  document.getElementById('jdExpiredStep').style.display='block';
+  document.getElementById('jdAccessGate').style.display='flex';
+}
+function jdRenewAccess(){
+  document.getElementById('jdExpiredStep').style.display='none';
+  document.getElementById('jdGateStep1').style.display='none';
+  document.getElementById('jdGateStep2').style.display='block';
+  const savedPhone=localStorage.getItem('jd_access_phone')||'';
+  if(savedPhone)document.getElementById('jdAccessPhone').value=savedPhone;
+  document.getElementById('jdAccessCode').value='';
+}
+
+function jdShowCodeStep(){
+  document.getElementById('jdGateStep1').style.display='none';
+  document.getElementById('jdGateStep2').style.display='block';
+}
+function jdBackGate(){
+  document.getElementById('jdGateStep2').style.display='none';
+  document.getElementById('jdGateStep1').style.display='block';
+}
+function jdB64UrlDecode(s){
+  s=s.replace(/-/g,'+').replace(/_/g,'/');
+  while(s.length%4)s+='=';
+  const bin=atob(s);
+  return Uint8Array.from(bin,c=>c.charCodeAt(0));
+}
+function jdPemBytes(pem){
+  const b64=pem.replace(/-----BEGIN PUBLIC KEY-----/g,'').replace(/-----END PUBLIC KEY-----/g,'').replace(/\s/g,'');
+  const bin=atob(b64);
+  return Uint8Array.from(bin,c=>c.charCodeAt(0));
+}
+async function jdVerifyCode(code, phone){
+  try{
+    const parts=code.trim().split('.');
+    if(parts.length!==2)return false;
+    const payloadBytes=jdB64UrlDecode(parts[0]);
+    const sigBytes=jdB64UrlDecode(parts[1]);
+    const payload=JSON.parse(new TextDecoder().decode(payloadBytes));
+    if(String(payload.phone)!==phone.slice(-10))return false;
+    if(Number(payload.exp)>0 && Date.now()>Number(payload.exp))return false;
+    const key=await crypto.subtle.importKey(
+      'spki', jdPemBytes(JD_PUBLIC_KEY_PEM),
+      {name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'}, false, ['verify']
+    );
+    return await crypto.subtle.verify({name:'RSASSA-PKCS1-v1_5'},key,sigBytes,payloadBytes);
+  }catch(e){ return false; }
+}
+async function jdVerifyAndUnlock(){
+  const phone=document.getElementById('jdAccessPhone').value.replace(/\D/g,'').slice(-10);
+  const code=document.getElementById('jdAccessCode').value.trim();
+  const err=document.getElementById('jdAccessError');
+  const btn=document.getElementById('jdVerifyBtn');
+  err.style.display='none';
+  if(phone.length!==10){err.textContent='Enter a valid 10-digit mobile number.';err.style.display='block';return;}
+  if(!code){err.textContent='Enter your Owner Access Code.';err.style.display='block';return;}
+  btn.disabled=true;btn.textContent='Verifying...';
+  const ok=await jdVerifyCode(code,phone);
+  btn.disabled=false;btn.textContent='Verify Code & Unlock';
+  if(ok){
+    localStorage.setItem('jd_access_phone',phone);
+    localStorage.setItem('jd_access_code',code);
+    document.getElementById('jdAccessGate').style.display='none'; jdUpdateSubscriptionDashboard();
+  }else{
+    if(jdIsExpiredCode(code)){
+      localStorage.setItem('jd_access_phone',phone);
+      localStorage.removeItem('jd_access_code');
+      jdShowExpired();
+    }else{
+      err.textContent='Invalid Access Code. Please contact JD Retailer owner.';
+      err.style.display='block';
+    }
+  }
+}
+
+function jdFormatDate(ms){
+  if(!ms)return 'No Expiry';
+  try{
+    return new Date(ms).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  }catch(e){return '-';}
+}
+function jdUpdateSubscriptionDashboard(){
+  const phone=localStorage.getItem('jd_access_phone')||'';
+  const code=localStorage.getItem('jd_access_code')||'';
+  const payload=code?jdReadPayload(code):null;
+  const now=Date.now();
+
+  let status='Inactive', days='0', expiry='-', active=false;
+  if(payload && String(payload.phone)===phone.slice(-10)){
+    const exp=Number(payload.exp||0);
+    if(exp===0){
+      status='Active'; days='∞'; expiry='No Expiry'; active=true;
+    }else if(exp>now){
+      active=true;
+      const remaining=exp-now;
+      days=String(Math.max(1,Math.ceil(remaining/86400000)));
+      expiry=jdFormatDate(exp);
+      status='Active';
+    }else{
+      status='Expired'; days='0'; expiry=jdFormatDate(exp);
+    }
+  }
+
+  const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val};
+  set('subDaysLeft',days);
+  set('subStatusText',status);
+  set('subPhone',phone?'+91 '+phone:'-');
+  set('subExpiry',expiry);
+
+  const badge=document.getElementById('subStatusBadge');
+  if(badge){
+    badge.textContent=status.toUpperCase();
+    badge.style.background=active?'#111':'#fff';
+    badge.style.color=active?'#fff':'#111';
+  }
+
+  const warning=document.getElementById('subExpiryWarning');
+  if(warning){
+    const n=parseInt(days,10);
+    warning.style.display=(active && Number.isFinite(n) && n<=5)?'block':'none';
+  }
+}
+function jdOpenRenewFromSettings(){
+  document.getElementById('jdAccessGate').style.display='flex';
+  document.getElementById('jdExpiredStep').style.display='none';
+  document.getElementById('jdGateStep1').style.display='none';
+  document.getElementById('jdGateStep2').style.display='block';
+  const phone=localStorage.getItem('jd_access_phone')||'';
+  if(phone)document.getElementById('jdAccessPhone').value=phone;
+  document.getElementById('jdAccessCode').value='';
+}
+
+async function jdCheckSavedAccess(){
+  const phone=localStorage.getItem('jd_access_phone')||'';
+  const code=localStorage.getItem('jd_access_code')||'';
+  if(phone && code && await jdVerifyCode(code,phone)){
+    document.getElementById('jdAccessGate').style.display='none';
+    jdUpdateSubscriptionDashboard();
+  }else if(phone && code && jdIsExpiredCode(code)){
+    localStorage.removeItem('jd_access_code');
+    jdShowExpired();
+  }else{
+    localStorage.removeItem('jd_access_code');
+    document.getElementById('jdExpiredStep').style.display='none';
+    document.getElementById('jdGateStep2').style.display='none';
+    document.getElementById('jdGateStep1').style.display='block';
+    document.getElementById('jdAccessGate').style.display='flex';
+  }
+}
+window.addEventListener('DOMContentLoaded',jdCheckSavedAccess);
+</script>
+
+</body>
+</html>
