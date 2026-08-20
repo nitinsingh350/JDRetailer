@@ -11,31 +11,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java 17
+      - name: Extract Android Project
+        run: |
+          mkdir buildsrc
+          unzip JD_Retailer_BUILD_READY.zip -d buildsrc
+
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android SDK 36
-        run: sdkmanager "platforms;android-36" "platform-tools"
+      - name: Install SDK
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
-      - name: Set up Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.10.2'
 
       - name: Build APK
+        working-directory: buildsrc
         run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: JD-Retailer-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: buildsrc/app/build/outputs/apk/debug/app-debug.apk
